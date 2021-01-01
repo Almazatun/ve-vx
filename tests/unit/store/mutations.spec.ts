@@ -10,25 +10,31 @@ beforeEach(() => {
     }
 })
 
-describe("Mutations of the store, index.ts", () => {
-    it("status of the store should be equal idle", () => {
+describe("Mutations of the state, index.ts", () => {
+    it("status of the state should be equal idle", () => {
         const status: STORE_STATUS = STORE_STATUS.IDLE;
         mutations.SET_STATUS(state, status)
         expect(state.status).toEqual("idle");
     })
-    it("status of the store should be equal failed", () => {
+    it("status of the state should be equal failed", () => {
         const status: STORE_STATUS = STORE_STATUS.FAILED;
         mutations.SET_STATUS(state, status)
         expect(state.status).toEqual("failed");
     })
-    it("status of the store should be equal loading", () => {
+    it("status of the state should be equal loading", () => {
         const status: STORE_STATUS = STORE_STATUS.LOADING;
         mutations.SET_STATUS(state, status)
         expect(state.status).toEqual("loading");
     })
-    it("status of the store should be equal success", () => {
+    it("status of the state should be equal success", () => {
         const status: STORE_STATUS = STORE_STATUS.SUCCESS;
         mutations.SET_STATUS(state, status)
         expect(state.status).toEqual("success");
+    })
+    it("should set error state when dashboard api return some error", () => {
+        const errorMessage: string = 'Some error';
+        mutations.SET_ERROR(state, errorMessage)
+        expect(state.status).toEqual("idle");
+        expect(state.error).toEqual("Some error");
     })
 });
