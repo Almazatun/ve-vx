@@ -15,7 +15,7 @@ export type MutationsT<S = StoreState> = {
 
 
 export const mutations: MutationTree<StoreState> & MutationsT = {
-    [STORE_MUTATIONS.SET_STATUS](state: StoreState, payload) {
+    [STORE_MUTATIONS.SET_STATUS](state, payload) {
         state.status = payload
     },
     [STORE_MUTATIONS.SET_ERROR](state, payload) {
