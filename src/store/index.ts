@@ -1,9 +1,10 @@
-import {createStore} from "vuex";
-import {mutations} from "@/store/mutations";
-import {actions} from "@/store/actions";
-import {getters} from "@/store/getters";
+import {createStore, ModuleTree} from "vuex";
+import {mutations} from "./mutations";
+import {actions} from "./actions";
+import {getters} from "./getters";
+import {moduleTodoLists} from "./modules/todo_lists/todo_lists";
+import {RootState} from "@/confirm/types";
 
-//Types
 export interface StoreState {
     status: StatusT
     error: string | null
@@ -19,17 +20,22 @@ export enum STORE_STATUS {
     FAILED = 'failed'
 }
 
-
 const state: StoreState = {
     status: 'idle',
     error: null,
 }
 
+// Modules
+const modules: ModuleTree<RootState> = {
+    TLS: moduleTodoLists,
+};
+
 export const store = createStore({
+    strict: true,
     state: state,
     mutations: mutations,
     actions: actions,
     getters: getters,
-    modules: {}
+    modules: modules
 });
 
