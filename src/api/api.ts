@@ -3,31 +3,31 @@ import {instance} from "@/confirm/axios";
 //API
 export const API_TODO_LISTS = {
     getTodoLists(){
-        return instance.get<Array<IGetTodoLists>>(`/todo-lists`)
-            .then((res: { data: Array<IGetTodoLists> }) => res.data)
+        return instance.get<Array<GetTodoList>>(`/todo-lists`)
+            .then((res: { data: Array<GetTodoList> }) => res.data)
     },
     createTodoList(data: {title: string}){
-        return instance.post<IUniqueTodoListRes<IGetTodoLists>>('/todo-lists', data).
-        then((res: { data: IUniqueTodoListRes<IGetTodoLists> }) => res.data)
+        return instance.post<UniqueTodoListRes<GetTodoList>>('/todo-lists', data).
+        then((res: { data: UniqueTodoListRes<GetTodoList> }) => res.data)
     },
     deleteTodoList(todolistId: string){
-        return instance.delete<IUniqueTodoListRes>(`/todo-lists/${todolistId}`)
-            .then((res: {data: IUniqueTodoListRes}) => res.data)
+        return instance.delete<UniqueTodoListRes>(`/todo-lists/${todolistId}`)
+            .then((res: {data: UniqueTodoListRes}) => res.data)
     },
     updateTodoList(todolistId :string, data: {title: string}){
-        return instance.put<IUniqueTodoListRes>(`/todo-lists/${todolistId}`, data)
-            .then((res: {data: IUniqueTodoListRes}) => res.data)
+        return instance.put<UniqueTodoListRes>(`/todo-lists/${todolistId}`, data)
+            .then((res: {data: UniqueTodoListRes}) => res.data)
     }
 }
 
 //Types
-interface IGetTodoLists {
+export interface GetTodoList {
     id: string
-    addedData: bigint
+    addedData: string | number
     order: number
     title: string
 }
-interface IUniqueTodoListRes<T = {}> {
+export interface UniqueTodoListRes<T = {}> {
     resultCode: number
     messages: Array<string>,
     data: {item: T}
