@@ -8,7 +8,7 @@ export enum STORE_ACTIONS {
     ERROR_STORE = 'ERROR_STORE'
 }
 
-type AugmentedActionContext = {
+export type AugmentedActionContext = {
     commit<K extends keyof MutationsT>(
         key: K,
         payload: Parameters<MutationsT[K]>[1]
@@ -29,10 +29,10 @@ export interface Actions {
 }
 
 export const actions: ActionTree<StoreState, StoreState> & Actions = {
-    [STORE_ACTIONS.UPDATE_STATUS]({commit}, payload: StatusT) {
+    [STORE_ACTIONS.UPDATE_STATUS]({commit}, payload) {
         commit(STORE_MUTATIONS.SET_STATUS, payload)
     },
-    [STORE_ACTIONS.ERROR_STORE]({commit}, payload: string) {
+    [STORE_ACTIONS.ERROR_STORE]({commit}, payload) {
         commit(STORE_MUTATIONS.SET_ERROR, payload)
     }
 }
