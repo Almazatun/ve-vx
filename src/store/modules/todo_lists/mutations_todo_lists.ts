@@ -25,7 +25,7 @@ export const mutationsTodoLists: MutationTree<TodoListsStateT> & MutationsTodoLi
         const newTodoListsArr: TodoLists  = payload.todoLists.map(tl => {
             return {...tl, requestStatus: 'idle'}
         })
-        state.todoLists = [...state.todoLists, ...newTodoListsArr]
+        state.todoLists = newTodoListsArr
     },
     [MUTATIONS_TODO_LISTS.ADD_TL](state, payload){
        state.todoLists.push(payload.newTodoList)
