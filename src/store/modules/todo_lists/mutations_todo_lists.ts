@@ -28,7 +28,7 @@ export const mutationsTodoLists: MutationTree<TodoListsStateT> & MutationsTodoLi
         state.todoLists = newTodoListsArr
     },
     [MUTATIONS_TODO_LISTS.ADD_TL](state, payload){
-       state.todoLists.push(payload.newTodoList)
+       state.todoLists = [payload.newTodoList, ...state.todoLists]
     },
     [MUTATIONS_TODO_LISTS.REMOVE_TL](state, payload){
         state.todoLists = state.todoLists.filter(tl => tl.id !== payload.todoListId)
