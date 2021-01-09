@@ -5,6 +5,7 @@ import {getters} from "./getters";
 import {moduleTodoLists} from "./modules/todo_lists/todo_lists";
 import {RootState} from "@/confirm/types";
 
+//Types
 export interface StoreState {
     status: StatusT
     error: string | null

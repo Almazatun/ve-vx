@@ -1,9 +1,8 @@
 <template>
-  <div class="container flex flex-col bg-green-100 h-screen w-screen items-center text-center">
+  <div class="flex flex-col bg-gray-200 h-screen w-screen">
     <Routers/>
     <router-view/>
   </div>
-
 </template>
 
 <script>
