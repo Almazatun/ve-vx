@@ -7,16 +7,36 @@ export const API_TODO_LISTS = {
             .then((res: { data: Array<GetTodoList> }) => res.data)
     },
     createTodoList(data: {title: string}){
-        return instance.post<UniqueTodoListRes<GetTodoList>>('/todo-lists', data).
-        then((res: { data: UniqueTodoListRes<GetTodoList> }) => res.data)
+        return instance.post<UniqueResponse<GetTodoList>>('/todo-lists', data).
+        then((res: { data: UniqueResponse<GetTodoList> }) => res.data)
     },
     deleteTodoList(todolistId: string){
-        return instance.delete<UniqueTodoListRes>(`/todo-lists/${todolistId}`)
-            .then((res: {data: UniqueTodoListRes}) => res.data)
+        return instance.delete<UniqueResponse>(`/todo-lists/${todolistId}`)
+            .then((res: {data: UniqueResponse}) => res.data)
     },
     updateTodoList(todolistId :string, data: {title: string}){
-        return instance.put<UniqueTodoListRes>(`/todo-lists/${todolistId}`, data)
-            .then((res: {data: UniqueTodoListRes}) => res.data)
+        return instance.put<UniqueResponse>(`/todo-lists/${todolistId}`, data)
+            .then((res: {data: UniqueResponse}) => res.data)
+    }
+}
+
+export const API_ITEMS = {
+    getItemsOfTheList(todolistId: string) {
+        return instance.get<GetItems>(`/todo-lists/${todolistId}/tasks`).then(response => response.data)
+    },
+    createItemOfSpecialList(todolistId: string, newTitle: string) {
+        return  instance.post<UniqueResponse<{ item: Item }>>(`/todo-lists/${todolistId}/tasks`, {title: newTitle})
+            .then(response => {return response.data})
+    },
+    updateParticularDataOfSpecialList(todolistId: string, itemId: string, model: UpdateItemModel) {
+        return  instance.put<UniqueResponse>(`/todo-lists/${todolistId}/tasks/${itemId}`, model)
+    },
+    updateParticularDataList(todolistId: string, itemId: string, value: string) {
+        return  instance.put<UniqueResponse>(`/todo-lists/${todolistId}/tasks/${itemId}`, {title: value})
+            .then(response => response.data)
+    },
+    deleteItemOfSpecialList(todoListId: string, itemId: string) {
+        return  instance.delete<UniqueResponse>(`/todo-lists/${todoListId}/tasks/${itemId}`).then(response => response.data)
     }
 }
 
@@ -27,8 +47,41 @@ export interface GetTodoList {
     order: number
     title: string
 }
-export interface UniqueTodoListRes<T = {}> {
+export interface UniqueResponse<T = {}> {
     resultCode: number
     messages: Array<string>,
     data: {item: T}
+}
+interface GetItems<T = Item> {
+    items: Array<T>
+}
+export interface Item {
+    description: string
+    title: string
+    completed: boolean
+    status: number
+    priority: number
+    startDate: bigint | string
+    deadline: bigint | string
+    id: string
+    todoListId: string
+    order: number
+    addedDate: bigint | string
+}
+export interface UpdateItemModel {
+    title: string
+    description: string
+    completed: boolean
+    status: ItemStatuses
+    priority: number
+    startDate: string
+    deadline: string
+}
+
+//Enums
+export enum ItemStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
 }
