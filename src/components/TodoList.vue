@@ -53,9 +53,9 @@ export default defineComponent({
         const should = window.confirm("Are you sure you want to permanently delete todo list ?")
         if (should) {
           props.deleteTodoList(props.todoListId)
-          toggleMenu()
         }
       }
+      toggleMenu()
     }
 
     return {
