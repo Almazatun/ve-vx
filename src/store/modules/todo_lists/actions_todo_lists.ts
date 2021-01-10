@@ -40,6 +40,10 @@ export interface ActionsTodoLists {
         {commit}: AugmentedTLSActionContext,
         payload: { todoListId: string }
     ):void
+    [ACTIONS_TODO_LISTS.CHANGE_TL_TITLE](
+        {commit}: AugmentedTLSActionContext,
+        payload: { todoListId: string, title: string }
+    ):void
 }
 
 export const actionsTodoLists: ActionTree<TodoListsStateT, RootState> & ActionsTodoLists = {
@@ -78,6 +82,20 @@ export const actionsTodoLists: ActionTree<TodoListsStateT, RootState> & ActionsT
             //disable
             const receiveData = await API_TODO_LISTS.deleteTodoList(payload.todoListId)
             commit(MUTATIONS_TODO_LISTS.REMOVE_TL, {todoListId: payload.todoListId})
+            //un-disable
+        } catch (error) {
+            if (error.messages.length) {
+                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+            } else {
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+            }
+        }
+    },
+    async[ACTIONS_TODO_LISTS.CHANGE_TL_TITLE]({commit}, payload){
+        try {
+            //disable
+            const receiveData = await API_TODO_LISTS.updateTodoList(payload.todoListId, {title: payload.title})
+            commit(MUTATIONS_TODO_LISTS.CHANGE_TL_TITLE, {todoListId: payload.todoListId, title: payload.title})
             //un-disable
         } catch (error) {
             if (error.messages.length) {
