@@ -5,7 +5,8 @@
     <div v-for="tl in todoLists" :key="tl.id">
       <TodoList :todo-list-title="tl.title"
                 :todo-list-id="tl.id"
-                :delete-todo-list="deleteTodoList"
+                v-on:update-title="updateTodoList"
+
       />
     </div>
     <AddList v-if="inputActive"
@@ -55,11 +56,20 @@ export default defineComponent({
           })
         }
 
+        function updateTodoList(event: Event , todoListId: string, title: string){
+          store.dispatch({
+            type: 'TLS/CHANGE_TL_TITLE',
+            todoListId,
+            title
+          })
+        }
+
         return {
           inputActive,
           toggleInputMode,
           addTodoList,
-          deleteTodoList
+          deleteTodoList,
+          updateTodoList
         }
       },
       computed: {
