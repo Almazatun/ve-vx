@@ -10,7 +10,7 @@
       </button>
     </div>
     <div v-if="show" class="flex flex-col absolute right-2 bg-gray-100 rounded-lg">
-      <span class="hover:bg-blue-200 p-4 rounded-t-lg cursor-pointer">Rename list</span>
+      <span @click="changeTodoListTitle" class="hover:bg-blue-200 p-4 rounded-t-lg cursor-pointer">Rename list</span>
       <span @click="removeTodoList" class="hover:bg-red-100 p-4 rounded-b-lg cursor-pointer">Delete list</span>
     </div>
   </div>
@@ -33,7 +33,11 @@ export default defineComponent({
     todoListId: {
       type: String,
       required: true
-    }
+    },
+    updateTodoList: {
+      type: Function,
+      required: true
+    },
   },
   setup (props){
     const editTodoListIcon = "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"
@@ -59,7 +63,16 @@ export default defineComponent({
       closeMenuTodoListIcon,
       show,
       toggleMenu,
-      removeTodoList
+      removeTodoList,
+    }
+  },
+  methods: {
+    changeTodoListTitle(event: Event){
+      const title: string | null = prompt(`Please enter new title of the list`, '')
+      if (title?.trim() !== ''){
+        this.$emit('update-title', event, this.todoListId, title)
+        this.toggleMenu()
+      }
     }
   }
 })
