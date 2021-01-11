@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col bg-gray-200 h-screen w-screen">
+  <div class="flex flex-col bg-gray-200 w-screen" style="min-height: 100vh">
     <Routers/>
     <router-view/>
   </div>

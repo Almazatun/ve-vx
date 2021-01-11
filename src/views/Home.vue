@@ -1,20 +1,20 @@
 <template>
-  <div class="container grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2
+  <div class="lg:container md:container grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2
    gap-6 mx-auto justify-items-center align-middle
-   lg:p-0 md:p-1.5 sm:p-10 p-12" style="margin: 0 auto">
+   lg:p-0 md:p-1.5 sm:p-6" style="margin: 16px auto">
     <div v-for="tl in todoLists" :key="tl.id">
       <TodoList :todo-list-title="tl.title"
                 :todo-list-id="tl.id"
                 v-on:update-title="updateTodoList"
-
       />
     </div>
     <AddList v-if="inputActive"
              :toggle-input-mode="toggleInputMode"
              :add-todo-list="addTodoList"
     />
-    <div class="container text-left font-bold p-4 h-16 lg:w-96 md:w-60 rounded-lg bg-blue-300 hover:bg-blue-400
-          cursor-pointer shadow-2xl relative
+    <div class="xl:container lg:container text-left font-bold p-4 h-16 xl:w-96 lg:w-80 md:w-80 sm:w-100
+          rounded-lg bg-blue-300 hover:bg-blue-400
+          cursor-pointer shadow-2xl relative sm:mb-4
           "
          v-else @click="toggleInputMode"
     >

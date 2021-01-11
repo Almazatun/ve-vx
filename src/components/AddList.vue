@@ -1,10 +1,9 @@
 <template>
-  <div class="min-h-150">
-    <div class="flex flex-col justify-between m-0
-      container text-left font-bold p-4 lg:w-96 md:w-60 rounded-lg bg-gray-600
-      shadow-2xl
-     "
-    >
+  <div class="xl:container lg:container xl:w-96 lg:w-80 md:w-80 min-h-150 xl:w-96 lg:w-80 sm:container">
+    <div class="
+      flex flex-col justify-between m-0
+      text-left font-bold p-4 rounded-lg bg-gray-600
+      shadow-2xl">
       <label>
       <textarea :style="styleTextArea" class="font-sans p-2 rounded-md mb-2
                 focus:outline-none focus:ring focus:border-blue-300"
@@ -64,7 +63,7 @@ export default defineComponent({
         minHeight: '65px',
         lineHeight: '20px',
       }
-    }
+    },
   }
 })
 </script>
