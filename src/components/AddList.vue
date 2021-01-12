@@ -1,5 +1,5 @@
 <template>
-  <div class="xl:container lg:container xl:w-96 lg:w-80 md:w-80 min-h-150 xl:w-96 lg:w-80 sm:container">
+  <div class="xl:container lg:container 2xl:w-96 xl:w-80 lg:w-80 md:w-72 min-h-150 sm:container">
     <div class="
       flex flex-col justify-between m-0
       text-left font-bold p-4 rounded-lg bg-gray-600
