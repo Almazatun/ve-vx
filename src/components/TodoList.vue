@@ -1,5 +1,6 @@
 <template>
-  <div style="min-height: 250px" class="container rounded-lg lg:w-96 md:w-60 bg-white p-4 shadow-2xl relative">
+  <div style="min-height: 250px" class="xl:container lg:container rounded-lg 2xl:w-96 xl:w-80 lg:w-80 md:w-72 sm:w-64
+  bg-white p-4 shadow-2xl relative">
     <div class="flex flex-row justify-between ">
       <span class="font-bold ">{{ todoListTitle }}</span>
       <button v-if="!show" class="focus:outline-none p-1.5" @click="toggleMenu">
@@ -13,14 +14,27 @@
       <span @click="changeTodoListTitle" class="hover:bg-blue-200 p-4 rounded-t-lg cursor-pointer">Rename list</span>
       <span @click="removeTodoList" class="hover:bg-red-100 p-4 rounded-b-lg cursor-pointer">Delete list</span>
     </div>
+    <div v-for="item in items" :key="item.id">
+      <Item :todo-list-id="todoListId"
+            :item-status="item.status"
+            :added-date-item="item.addedDate"
+            :title-item="item.title"
+      />
+    </div>
+
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, computed} from 'vue'
+import Item from "@/components/Item.vue";
+import {useStore} from "vuex";
 
 export default defineComponent({
   name: "TodoList",
+  components: {
+    Item
+  },
   props: {
     todoListTitle: {
       type: String,
@@ -39,17 +53,21 @@ export default defineComponent({
       required: true
     },
   },
-  setup (props){
+  setup(props) {
+    const store = useStore()
+    const items = computed(() => store.getters['IMS/todoItems'](props.todoListId))
     const editTodoListIcon = "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"
     const closeMenuTodoListIcon = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/OOjs_UI_icon_close.svg/480px-OOjs_UI_icon_close.svg.png"
     const show = ref<boolean>(false)
 
-    function toggleMenu(){
+
+
+    function toggleMenu() {
       show.value = !show.value
     }
 
-    function removeTodoList(){
-      if (props.todoListId !== ''){
+    function removeTodoList() {
+      if (props.todoListId !== '') {
         const should = window.confirm("Are you sure you want to permanently delete todo list ?")
         if (should) {
           props.deleteTodoList(props.todoListId)
@@ -64,16 +82,26 @@ export default defineComponent({
       show,
       toggleMenu,
       removeTodoList,
+      items
     }
   },
   methods: {
-    changeTodoListTitle(event: Event){
+    changeTodoListTitle(event: Event) {
       const title: string | null = prompt(`Please enter new title of the list`, '')
-      if (title?.trim() !== ''){
+      if (title?.trim() !== '') {
         this.$emit('update-title', event, this.todoListId, title)
         this.toggleMenu()
       }
-    }
+    },
+    fetchTodoItemsData() {
+      this.$store.dispatch({
+        type: 'IMS/FETCH_I',
+        todoListId: this.todoListId
+      })
+    },
+  },
+  created() {
+    this.fetchTodoItemsData()
   }
 })
 
