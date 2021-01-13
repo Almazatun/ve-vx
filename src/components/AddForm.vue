@@ -1,5 +1,4 @@
 <template>
-  <div class="xl:container lg:container 2xl:w-96 xl:w-80 lg:w-80 md:w-72 min-h-150 sm:container">
     <div class="
       flex flex-col justify-between m-0
       text-left font-bold p-4 rounded-lg bg-gray-600
@@ -13,27 +12,30 @@
                 v-model="titleNewList"></textarea>
       </label>
       <div>
-        <button @click="addNewTodoList" class="bg-green-400 mr-2 p-2 rounded-md shadow-inner focus:outline-none">Add
-          list
+        <button @click="addNewTodoList" class="bg-green-400 mr-2 p-2 rounded-md shadow-inner focus:outline-none">
+          {{titleSpan}}
         </button>
         <button @click="toggleInputMode" class="bg-red-300 p-2 rounded-md shadow-inner focus:outline-none">❌</button>
       </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
 
 export default defineComponent({
-  name: "AddList",
+  name: "AddForm",
   props: {
     toggleInputMode: {
       type: Function,
       required: true
     },
-    addTodoList: {
+    callbackFun: {
       type: Function,
+      required: true
+    },
+    titleSpan:{
+      type: String,
       required: true
     }
   },
@@ -42,9 +44,11 @@ export default defineComponent({
 
     function addNewTodoList(){
       if (titleNewList.value.trim() !== ''){
-        props.addTodoList(titleNewList.value)
+        props.callbackFun(titleNewList.value)
         titleNewList.value = ''
         props.toggleInputMode()
+      } else {
+        alert('Field should be required 🦉')
       }
     }
 
