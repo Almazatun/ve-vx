@@ -25,7 +25,7 @@ export const API_ITEMS = {
         return instance.get<GetItems>(`/todo-lists/${todolistId}/tasks`).then(response => response.data)
     },
     createItemOfSpecialList(todolistId: string, newTitle: string) {
-        return  instance.post<UniqueResponse<{ item: Item }>>(`/todo-lists/${todolistId}/tasks`, {title: newTitle})
+        return  instance.post<UniqueResponse<Item>>(`/todo-lists/${todolistId}/tasks`, {title: newTitle})
             .then(response => {return response.data})
     },
     updateParticularDataOfSpecialList(todolistId: string, itemId: string, model: UpdateItemModel) {
@@ -74,8 +74,8 @@ export interface UpdateItemModel {
     completed: boolean
     status: ItemStatuses
     priority: number
-    startDate: string
-    deadline: string
+    startDate: string | bigint
+    deadline: string | bigint
 }
 
 //Enums
