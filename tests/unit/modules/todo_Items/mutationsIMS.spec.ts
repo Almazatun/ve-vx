@@ -234,6 +234,25 @@ describe("Mutations, Items module, mutations_todo_items.ts", () => {
         expect(startState.items[firstTodoList].length).toEqual(3)
         expect(startState.items[firstTodoList][1].requestStatus).toEqual('failed');
     })
+    it("new item should be added special todolist", () => {
+        const payload : Item = {
+            description: 'newItem',
+            title: 'Angular',
+            completed: false,
+            status: 0,
+            priority: 0,
+            startDate: '2021.01',
+            deadline: '2021.01',
+            id: '2021',
+            todoListId: firstTodoList,
+            order: 1,
+            addedDate: '2021.01'
+        }
+
+        mutationsItems.ADD_NEW_I(startState, {todoListId: firstTodoList, item: payload})
+        expect(startState.items[firstTodoList].length).toEqual(4)
+        expect(startState.items[firstTodoList][0].title).toEqual('Angular');
+    })
 
 });
 
