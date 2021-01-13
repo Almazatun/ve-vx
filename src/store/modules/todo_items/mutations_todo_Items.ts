@@ -1,4 +1,4 @@
-import {ItemsStateT} from "@/store/modules/todo_items/todo_Items";
+import {ItemMain, ItemsStateT} from "@/store/modules/todo_items/todo_Items";
 import {MutationTree} from "vuex";
 import {Item, ItemStatuses} from "@/api/api";
 import {StatusT} from "@/store";
@@ -10,7 +10,8 @@ export enum MUTATIONS_TODO_ITEMS {
     CHANGE_STATUS_I = 'CHANGE_STATUS_I',
     DELETE_I = 'DELETE_I',
     RENAME_TITLE_I = 'RENAME_TITLE_I',
-    CHANGE_REQUEST_STATUS_I = 'CHANGE_REQUEST_STATUS_I'
+    CHANGE_REQUEST_STATUS_I = 'CHANGE_REQUEST_STATUS_I',
+    ADD_NEW_I = 'ADD_NEW_I'
 }
 
 //Types
@@ -29,6 +30,9 @@ export type MutationsTodoItems<I = ItemsStateT> = {
     }): void
     [MUTATIONS_TODO_ITEMS.CHANGE_REQUEST_STATUS_I](state: I, payload: {
         todoListId: string, itemId: string, requestStatus: StatusT
+    }): void
+    [MUTATIONS_TODO_ITEMS.ADD_NEW_I](state: I, payload: {
+        todoListId: string, item: Item
     }): void
 }
 
@@ -61,6 +65,10 @@ export const mutationsItems: MutationTree<ItemsStateT> & MutationsTodoItems = {
                 return i.id !== payload.itemId ? i : {...i, requestStatus: payload.requestStatus}
             })
         ]
+    },
+    [MUTATIONS_TODO_ITEMS.ADD_NEW_I](state, payload){
+        const item: ItemMain = {...payload.item, requestStatus: 'idle'}
+        state.items[payload.todoListId] = [item, ...state.items[payload.todoListId]]
     }
 
 }
