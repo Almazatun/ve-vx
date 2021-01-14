@@ -19,7 +19,29 @@
             :item-status="item.status"
             :added-date-item="item.addedDate"
             :title-item="item.title"
+            :delete-item="deleteItem"
+            :item-id="item.id"
+            :rename-item-title="renameItemTitle"
+            :change-item-status="changeItemStatus"
+
       />
+    </div>
+    <div>
+      <div v-if="toggleItem">
+        <AddForm v-if="toggleItem"
+                 :toggle-input-mode="toggleEditComponent"
+                 :callback-fun="createNewItem"
+                 title-span="Add new item"
+        />
+      </div>
+      <div v-else @click="toggleEditComponent"
+           class="container text-left font-sans p-4 h-12
+          rounded-lg bg-green-200
+          cursor-pointer
+          "
+      >
+        <span>➕ Add another item</span>
+      </div>
     </div>
 
   </div>
@@ -29,11 +51,13 @@
 import {defineComponent, ref, computed} from 'vue'
 import Item from "@/components/Item.vue";
 import {useStore} from "vuex";
+import AddForm from "@/components/AddForm.vue";
 
 export default defineComponent({
   name: "TodoList",
   components: {
-    Item
+    Item,
+    AddForm
   },
   props: {
     todoListTitle: {
@@ -52,6 +76,22 @@ export default defineComponent({
       type: Function,
       required: true
     },
+    createItem:{
+      type: Function,
+      required: true
+    },
+    deleteItem: {
+      type: Function,
+      required: true
+    },
+    renameItemTitle: {
+      type: Function,
+      required: true
+    },
+    changeItemStatus: {
+      type: Function,
+      required: true
+    }
   },
   setup(props) {
     const store = useStore()
@@ -59,11 +99,16 @@ export default defineComponent({
     const editTodoListIcon = "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"
     const closeMenuTodoListIcon = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/OOjs_UI_icon_close.svg/480px-OOjs_UI_icon_close.svg.png"
     const show = ref<boolean>(false)
+    const toggleItem = ref<boolean>(false)
 
 
 
     function toggleMenu() {
       show.value = !show.value
+    }
+
+    function toggleEditComponent() {
+      toggleItem.value = !toggleItem.value
     }
 
     function removeTodoList() {
@@ -76,13 +121,20 @@ export default defineComponent({
       toggleMenu()
     }
 
+    const createNewItem = (title: string) => {
+     props.createItem(props.todoListId, title)
+    }
+
     return {
       editTodoListIcon,
       closeMenuTodoListIcon,
       show,
       toggleMenu,
       removeTodoList,
-      items
+      items,
+      toggleItem,
+      toggleEditComponent,
+      createNewItem
     }
   },
   methods: {
@@ -90,8 +142,8 @@ export default defineComponent({
       const title: string | null = prompt(`Please enter new title of the list`, '')
       if (title?.trim() !== '') {
         this.$emit('update-title', event, this.todoListId, title)
-        this.toggleMenu()
       }
+      this.toggleMenu()
     },
     fetchTodoItemsData() {
       this.$store.dispatch({
