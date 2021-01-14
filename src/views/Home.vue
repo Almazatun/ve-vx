@@ -6,12 +6,19 @@
       <TodoList :todo-list-title="tl.title"
                 :todo-list-id="tl.id"
                 v-on:update-title="updateTodoList"
+                :delete-item="deleteItem"
+                :create-item="createNewItem"
+                :delete-todo-list="deleteTodoList"
+                :rename-item-title="renameItemTitle"
+                :change-item-status="changeItemStatus"
       />
     </div>
-    <AddList v-if="inputActive"
-             :toggle-input-mode="toggleInputMode"
-             :add-todo-list="addTodoList"
-    />
+    <div v-if="inputActive" class="xl:container lg:container 2xl:w-96 xl:w-80 lg:w-80 md:w-72 min-h-150 sm:container">
+      <AddForm :toggle-input-mode="toggleInputMode"
+               :callback-fun="addTodoList"
+               title-span="Add list"
+      />
+    </div>
     <div class="xl:container lg:container text-left font-bold p-4 h-16 2xl:w-96 xl:w-80 lg:w-80 md:w-72 sm:w-100
           rounded-lg bg-blue-300 hover:bg-blue-400
           cursor-pointer shadow-2xl relative sm:mb-4
@@ -27,19 +34,21 @@
 import TodoList from "@/components/TodoList.vue";
 import {mapGetters, useStore} from 'vuex'
 import {defineComponent, ref} from "vue";
-import AddList from "@/components/AddList.vue";
+import AddForm from "@/components/AddForm.vue";
+import {ItemStatuses} from "@/api/api";
 
 
 export default defineComponent({
       name: "Home",
       components: {
         TodoList: TodoList,
-        AddList: AddList
+        AddForm: AddForm
       },
       setup() {
         const store = useStore()
         const inputActive = ref<boolean>(false)
 
+        //TodoLists
         function addTodoList(title: string) {
             store.dispatch({
               type: 'TLS/CREATE_TL', title
@@ -64,12 +73,51 @@ export default defineComponent({
           })
         }
 
+        //TodoItems
+        function createNewItem(todoListId: string, title: string){
+          store.dispatch({
+            type: 'IMS/CREATE_I',
+            todoListId,
+            title
+          })
+        }
+
+        function deleteItem(todoListId: string, itemId: string){
+          store.dispatch({
+            type: 'IMS/DELETE_I',
+            todoListId,
+            itemId
+          })
+        }
+
+        function renameItemTitle(todoListId: string, itemId: string, title: string){
+          store.dispatch({
+            type: 'IMS/UPDATE_PROPERTY_I',
+            todoListId,
+            itemId,
+            model: {title}
+          })
+        }
+
+        function changeItemStatus(todoListId: string, itemId: string, status: ItemStatuses){
+          store.dispatch({
+            type: 'IMS/UPDATE_PROPERTY_I',
+            todoListId,
+            itemId,
+            model: {status}
+          })
+        }
+
         return {
           inputActive,
           toggleInputMode,
           addTodoList,
           deleteTodoList,
-          updateTodoList
+          updateTodoList,
+          createNewItem,
+          deleteItem,
+          renameItemTitle,
+          changeItemStatus
         }
       },
       computed: {
