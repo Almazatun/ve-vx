@@ -2,6 +2,8 @@ import {ItemMain, ItemsStateT} from "@/store/modules/todo_items/todo_Items";
 import {MutationTree} from "vuex";
 import {Item, ItemStatuses} from "@/api/api";
 import {StatusT} from "@/store";
+import {UpdateItem} from "@/confirm/types";
+
 
 
 //Enums
@@ -11,7 +13,8 @@ export enum MUTATIONS_TODO_ITEMS {
     DELETE_I = 'DELETE_I',
     RENAME_TITLE_I = 'RENAME_TITLE_I',
     CHANGE_REQUEST_STATUS_I = 'CHANGE_REQUEST_STATUS_I',
-    ADD_NEW_I = 'ADD_NEW_I'
+    ADD_NEW_I = 'ADD_NEW_I',
+    UPDATE_PROPERTY_I = 'UPDATE_PROPERTY_I'
 }
 
 //Types
@@ -33,6 +36,9 @@ export type MutationsTodoItems<I = ItemsStateT> = {
     }): void
     [MUTATIONS_TODO_ITEMS.ADD_NEW_I](state: I, payload: {
         todoListId: string, item: Item
+    }): void
+    [MUTATIONS_TODO_ITEMS.UPDATE_PROPERTY_I](state: I, payload : {
+        todoListId: string, itemId: string, item: UpdateItem
     }): void
 }
 
@@ -69,6 +75,11 @@ export const mutationsItems: MutationTree<ItemsStateT> & MutationsTodoItems = {
     [MUTATIONS_TODO_ITEMS.ADD_NEW_I](state, payload){
         const item: ItemMain = {...payload.item, requestStatus: 'idle'}
         state.items[payload.todoListId] = [item, ...state.items[payload.todoListId]]
+    },
+    [MUTATIONS_TODO_ITEMS.UPDATE_PROPERTY_I](state, payload){
+        state.items[payload.todoListId] = [...state.items[payload.todoListId].map(i => {
+            return  i.id !== payload.itemId ? i : {...i, ...payload.item}
+        })]
     }
 
 }

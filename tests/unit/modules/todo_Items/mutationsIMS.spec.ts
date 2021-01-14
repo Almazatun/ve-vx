@@ -2,6 +2,7 @@ import {ItemsStateT} from "@/store/modules/todo_items/todo_Items";
 import {mutationsItems} from "@/store/modules/todo_items/mutations_todo_Items";
 import {Item, ItemStatuses} from "@/api/api";
 import {StatusT} from "@/store";
+import {UpdateItem} from "@/confirm/types";
 
 const firstTodoList: string = 'firstTodoList'
 const secondTodoList: string = 'secondTodoList'
@@ -199,7 +200,7 @@ describe("Mutations, Items module, mutations_todo_items.ts", () => {
         expect(initialState.items[firstTodoList].length).toEqual(3);
     })
     it("specific item should be deleted", () => {
-        const payload : {todoListId: string, itemId: string} = {todoListId: secondTodoList, itemId: "3"}
+        const payload: { todoListId: string, itemId: string } = {todoListId: secondTodoList, itemId: "3"}
 
         mutationsItems.DELETE_I(startState, payload)
         expect(startState.items[secondTodoList].length).toEqual(2);
@@ -208,7 +209,7 @@ describe("Mutations, Items module, mutations_todo_items.ts", () => {
         expect(startState.items[secondTodoList][1].id).toBe("2");
     })
     it("specific item should be set new status", () => {
-        const payload : {todoListId: string, itemId: string, status: ItemStatuses} = {
+        const payload: { todoListId: string, itemId: string, status: ItemStatuses } = {
             todoListId: thirdTodoList, itemId: '1', status: ItemStatuses.Completed
         }
 
@@ -217,16 +218,16 @@ describe("Mutations, Items module, mutations_todo_items.ts", () => {
         expect(startState.items[thirdTodoList][0].status).toEqual(2);
     })
     it("specific item should be set new title", () => {
-        const payload : {todoListId: string, itemId: string, title: string} = {
-            todoListId: secondTodoList, itemId: '3', title: 'newItem'
+        const item: UpdateItem = {
+            title: 'Winter',
         }
 
-        mutationsItems.RENAME_TITLE_I(startState, payload)
+        mutationsItems.UPDATE_PROPERTY_I(startState, {todoListId: secondTodoList, itemId: '1', item})
         expect(startState.items[secondTodoList].length).toEqual(3)
-        expect(startState.items[secondTodoList][2].title).toEqual('newItem');
+        expect(startState.items[secondTodoList][0].title).toEqual('Winter');
     })
     it("specific item should be set new request status", () => {
-        const payload : {todoListId: string, itemId: string, requestStatus: StatusT} = {
+        const payload: { todoListId: string, itemId: string, requestStatus: StatusT } = {
             todoListId: firstTodoList, itemId: '2', requestStatus: 'failed'
         }
 
@@ -235,7 +236,7 @@ describe("Mutations, Items module, mutations_todo_items.ts", () => {
         expect(startState.items[firstTodoList][1].requestStatus).toEqual('failed');
     })
     it("new item should be added special todolist", () => {
-        const payload : Item = {
+        const payload: Item = {
             description: 'newItem',
             title: 'Angular',
             completed: false,
@@ -253,6 +254,30 @@ describe("Mutations, Items module, mutations_todo_items.ts", () => {
         expect(startState.items[firstTodoList].length).toEqual(4)
         expect(startState.items[firstTodoList][0].title).toEqual('Angular');
     })
+    it("specific property should be updated of the specific item", () => {
+        const item: UpdateItem = {
+            status: 100,
+        }
 
+        const keys = Object.keys(startState.items[firstTodoList][0])
+
+        mutationsItems.UPDATE_PROPERTY_I(startState, {todoListId: firstTodoList, itemId: '1', item})
+        expect(startState.items[firstTodoList].length).toEqual(3)
+        expect(startState.items[firstTodoList][0].status).toEqual(100);
+        expect(keys).toEqual([
+            'description',
+            'title',
+            'completed',
+            'status',
+            "priority",
+            "startDate",
+            "deadline",
+            "id",
+            "todoListId",
+            "order",
+            "addedDate",
+            "requestStatus",
+        ])
+    })
 });
 
