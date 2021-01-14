@@ -24,6 +24,7 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import {ItemStatuses} from "@/api/api";
+import {checkStatusOfItem} from "@/utils/checkStatusOfItem";
 
 export default defineComponent({
   name: 'Item',
@@ -88,26 +89,10 @@ export default defineComponent({
       changeStatusTodoItem
     }
   },
-  methods: {
-    checkStatusOfItem(status: number){
-      // eslint-disable-next-line
-      let colorStyle: string = ''
-        if (status === ItemStatuses.New) {
-          colorStyle = 'green'
-        } else if (status === ItemStatuses.InProgress){
-          colorStyle = 'yellow'
-        } else if (status === ItemStatuses.Completed) {
-          colorStyle = 'orange'
-        } else {
-          console.log('Not received item status ❌')
-        }
-      return colorStyle
-    }
-  },
   computed: {
     ItemContainerStyle() {
       // eslint-disable-next-line
-      let borderColor: string =  this.checkStatusOfItem(this.itemStatus)
+      let borderColor: string =  checkStatusOfItem(this.itemStatus)
       return {
         width: "100%",
         minHeight: "100px",
