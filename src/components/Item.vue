@@ -44,19 +44,42 @@ export default defineComponent({
       type: String,
       required: true,
       default: 'Title'
+    },
+    itemId: {
+      type: String,
+      required: true
+    },
+    deleteItem: {
+      type: Function,
+      required: true
+    },
+    renameItemTitle: {
+      type: Function,
+      required: true
+    },
+    changeItemStatus: {
+      type: Function,
+      required: true
     }
   },
-  setup() {
+  setup(props) {
+
     function renameTodoItem() {
-      alert("Rename")
+      const title: string | null = prompt(`Please enter new title of the list`, '')
+      if (title?.trim() !== '') {
+        props.renameItemTitle (props.todoListId, props.itemId, title)
+      } else {
+        alert("Hey, field should be required 👷‍♂️")
+      }
     }
 
     function deleteTodoItem() {
-      alert("Delete")
+      props.deleteItem(props.todoListId, props.itemId)
     }
 
     function changeStatusTodoItem() {
-      alert("Change status")
+      const checkStatus: number = props.itemStatus !== ItemStatuses.New ? ItemStatuses.New : ItemStatuses.Completed
+      props.changeItemStatus(props.todoListId, props.itemId, checkStatus)
     }
 
     return {
