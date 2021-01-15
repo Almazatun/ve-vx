@@ -1,4 +1,5 @@
 import {instance} from "@/confirm/axios";
+import {AuthResponse, SignInParams, UserAuthData} from "@/confirm/types";
 
 //API
 export const API_TODO_LISTS = {
@@ -38,6 +39,18 @@ export const API_ITEMS = {
     deleteItemOfSpecialList(todoListId: string, itemId: string) {
         return  instance.delete<UniqueResponse>(`/todo-lists/${todoListId}/tasks/${itemId}`).then(response => response.data)
     }
+}
+
+export const API_AUTH = {
+    SignIn (params: SignInParams) {
+        return instance.post<AuthResponse<UserAuthData>>(`/auth/login`, params).then(response => response.data)
+    },
+    AuthMe () {
+        return instance.get<AuthResponse<SignInParams>>(`/auth/me`).then(response => response.data)
+    },
+    SignOut () {
+        return instance.delete<AuthResponse>(`/auth/login`).then(response => response.data)
+    },
 }
 
 //Types
