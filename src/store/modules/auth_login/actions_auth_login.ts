@@ -24,7 +24,7 @@ type AugmentedActionContext = {
     ): ReturnType<MergeMutationsT[K]>
 } & Omit<ActionContext<AuthState, RootState>, 'commit'>
 
-interface ActionsAuthorization {
+export interface ActionsAuthorization {
     [ACTIONS_AUTH.LOG_IN](
         {commit}: AugmentedActionContext,
         payload: SignInParams
