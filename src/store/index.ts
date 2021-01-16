@@ -5,6 +5,7 @@ import {getters} from "./getters";
 import {moduleTodoLists} from "./modules/todo_lists/todo_lists";
 import {RootState} from "@/confirm/types";
 import {moduleItems} from "@/store/modules/todo_items/todo_Items";
+import {moduleAuth} from "@/store/modules/auth_login/auth_login";
 
 //Types
 export interface StoreState {
@@ -30,7 +31,8 @@ const state: StoreState = {
 // Modules
 const modules: ModuleTree<RootState> = {
     TLS: moduleTodoLists,
-    IMS: moduleItems
+    IMS: moduleItems,
+    AUTH: moduleAuth
 };
 
 export const store = createStore({
