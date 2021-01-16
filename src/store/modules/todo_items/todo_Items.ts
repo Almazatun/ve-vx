@@ -3,6 +3,8 @@ import {StatusT} from "@/store";
 import {mutationsItems} from "@/store/modules/todo_items/mutations_todo_Items";
 import {actionsItems} from "@/store/modules/todo_items/actions_todo_Items";
 import {gettersItems} from "@/store/modules/todo_items/getters_todo_Items";
+import {Module} from "vuex";
+import {RootState} from "@/confirm/types";
 
 //types
 export interface ItemsStateT {
@@ -19,7 +21,7 @@ const ItemsState: ItemsStateT = {
     items: {}
 }
 
-export const moduleItems = {
+export const moduleItems: Module<ItemsStateT, RootState> = {
     namespaced: true,
     state: ItemsState,
     mutations: mutationsItems,
