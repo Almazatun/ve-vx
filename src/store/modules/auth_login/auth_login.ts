@@ -2,6 +2,7 @@ import {mutationsAuthorization} from "@/store/modules/auth_login/mutations_auth_
 import {actionsAuthorization} from "@/store/modules/auth_login/actions_auth_login";
 import {Module} from "vuex";
 import {RootState} from "@/confirm/types";
+import {gettersAuth} from "@/store/modules/auth_login/getters_auth_login";
 
 //Types
 export interface AuthState {
@@ -17,4 +18,5 @@ export const moduleAuth: Module<AuthState, RootState> = {
     state: authState,
     mutations: mutationsAuthorization,
     actions: actionsAuthorization,
+    getters: gettersAuth
 }
