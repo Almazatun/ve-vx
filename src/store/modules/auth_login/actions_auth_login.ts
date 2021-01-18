@@ -15,7 +15,7 @@ export enum ACTIONS_AUTH {
 //Types
 type MergeMutationsT = MutationsAuthorization & MutationsT
 
-type AugmentedActionContext = {
+export type AugmentedActionContext = {
     commit<K extends keyof MergeMutationsT>(
         key: K,
         payload: Parameters<MergeMutationsT[K]>[1],
@@ -43,14 +43,27 @@ export const actionsAuthorization: ActionTree<AuthState, RootState> & ActionsAut
                 commit(MUTATIONS_AUTHORIZATION.LOG_IN, {auth: true})
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
             }else {
-                alert('Some error')
+                if (receiveData.messages[0]) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
             }
         } catch (error){
             if (error.messages.length) {
-                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
             } else {
-                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
             }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
         }
     },
     async [ACTIONS_AUTH.LOG_OUT]({commit}){
@@ -61,14 +74,27 @@ export const actionsAuthorization: ActionTree<AuthState, RootState> & ActionsAut
                 commit(MUTATIONS_AUTHORIZATION.LOG_OUT, {auth: false})
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
             }else {
-                alert('Some error')
+                if (receiveData.messages[0]) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
             }
         } catch (error){
             if (error.messages.length) {
-                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
             } else {
-                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
             }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
         }
     }
 }
