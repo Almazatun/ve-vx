@@ -1,16 +1,13 @@
 <template>
   <div class="flex flex-col bg-gray-200 w-screen" style="min-height: 100vh">
-    <Routers/>
     <router-view/>
   </div>
 </template>
 
-<script>
-import Routers from "@/components/Routers";
+<script lang="ts">
+import {defineComponent} from "vue";
 
-export default {
-  components: {
-    Routers: Routers
-  }
-}
+export default defineComponent ({
+  name: 'App'
+})
 </script>
