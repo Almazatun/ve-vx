@@ -2,7 +2,7 @@ export const validators = (email: string, password: string): Array<string> | any
     // eslint-disable-next-line
     let errors: Array<string> = []
 
-    if (!email) {
+    if (!email && email.trim() !== '') {
         errors.push('Email should be required 🤬')
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
         errors.push('Invalid email address ❌')
