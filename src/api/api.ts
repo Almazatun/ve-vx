@@ -31,6 +31,7 @@ export const API_ITEMS = {
     },
     updateParticularDataOfSpecialList(todolistId: string, itemId: string, model: UpdateItemModel) {
         return  instance.put<UniqueResponse>(`/todo-lists/${todolistId}/tasks/${itemId}`, model)
+            .then(response => {return response.data})
     },
     updateParticularDataList(todolistId: string, itemId: string, value: string) {
         return  instance.put<UniqueResponse>(`/todo-lists/${todolistId}/tasks/${itemId}`, {title: value})
