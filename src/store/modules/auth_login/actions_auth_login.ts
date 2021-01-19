@@ -64,6 +64,8 @@ export const actionsAuthorization: ActionTree<AuthState, RootState> & ActionsAut
             setTimeout(() => {
                 commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
             }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
         }
     },
     async [ACTIONS_AUTH.LOG_OUT]({commit}){
@@ -95,6 +97,8 @@ export const actionsAuthorization: ActionTree<AuthState, RootState> & ActionsAut
             setTimeout(() => {
                 commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
             }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
         }
     }
 }

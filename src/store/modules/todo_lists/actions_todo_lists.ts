@@ -32,18 +32,21 @@ export interface ActionsTodoLists {
         {commit}: AugmentedTLSActionContext,
         payload: TodoListsStateT
     ): void
+
     [ACTIONS_TODO_LISTS.CREATE_TL](
         {commit}: AugmentedTLSActionContext,
-        payload: {title: string}
-    ):void
+        payload: { title: string }
+    ): void
+
     [ACTIONS_TODO_LISTS.REMOVE_TL](
         {commit}: AugmentedTLSActionContext,
         payload: { todoListId: string }
-    ):void
+    ): void
+
     [ACTIONS_TODO_LISTS.CHANGE_TL_TITLE](
         {commit}: AugmentedTLSActionContext,
         payload: { todoListId: string, title: string }
-    ):void
+    ): void
 }
 
 export const actionsTodoLists: ActionTree<TodoListsStateT, RootState> & ActionsTodoLists = {
@@ -61,48 +64,117 @@ export const actionsTodoLists: ActionTree<TodoListsStateT, RootState> & ActionsT
             }
         }
     },
-    async[ACTIONS_TODO_LISTS.CREATE_TL]({commit}, payload){
-        const data: {title: string} = {title: payload.title}
+    async [ACTIONS_TODO_LISTS.CREATE_TL]({commit}, payload) {
+        const data: { title: string } = {title: payload.title}
         try {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
             //disable
             const receiveData = await API_TODO_LISTS.createTodoList(data)
-            const newData: {newTodoList: TodoList} = {newTodoList: {...receiveData.data.item, requestStatus: "idle"} }
-            commit(MUTATIONS_TODO_LISTS.ADD_TL, newData)
-            //un-disable
+            if (receiveData.resultCode === 0) {
+                const newData: { newTodoList: TodoList } = {
+                    newTodoList: {
+                        ...receiveData.data.item,
+                        requestStatus: "idle"
+                    }
+                }
+                commit(MUTATIONS_TODO_LISTS.ADD_TL, newData)
+                commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+                //un-disable
+            } else {
+                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
+            }
         } catch (error) {
             if (error.messages.length) {
-                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
             } else {
-                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
             }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
         }
     },
-    async[ACTIONS_TODO_LISTS.REMOVE_TL]({commit}, payload){
+    async [ACTIONS_TODO_LISTS.REMOVE_TL]({commit}, payload) {
         try {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
             //disable
             const receiveData = await API_TODO_LISTS.deleteTodoList(payload.todoListId)
-            commit(MUTATIONS_TODO_LISTS.REMOVE_TL, {todoListId: payload.todoListId})
-            //un-disable
+            if (receiveData.resultCode === 0) {
+                commit(MUTATIONS_TODO_LISTS.REMOVE_TL, {todoListId: payload.todoListId})
+                commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+                //un-disable
+            } else {
+                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
+            }
         } catch (error) {
             if (error.messages.length) {
-                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
             } else {
-                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
             }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
         }
     },
-    async[ACTIONS_TODO_LISTS.CHANGE_TL_TITLE]({commit}, payload){
+    async [ACTIONS_TODO_LISTS.CHANGE_TL_TITLE]({commit}, payload) {
         try {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
             //disable
             const receiveData = await API_TODO_LISTS.updateTodoList(payload.todoListId, {title: payload.title})
-            commit(MUTATIONS_TODO_LISTS.CHANGE_TL_TITLE, {todoListId: payload.todoListId, title: payload.title})
-            //un-disable
+            if (receiveData.resultCode === 0) {
+                commit(MUTATIONS_TODO_LISTS.CHANGE_TL_TITLE, {todoListId: payload.todoListId, title: payload.title})
+                commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+                //un-disable
+            } else {
+                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
+            }
         } catch (error) {
             if (error.messages.length) {
-                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
             } else {
-                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
             }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+            //un-disable
         }
     }
 }

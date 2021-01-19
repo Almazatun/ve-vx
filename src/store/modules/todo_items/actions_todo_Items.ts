@@ -53,6 +53,7 @@ export interface ActionsTodoItems {
             title: string
         }
     ): void
+
     [ACTIONS_TODO_ITEMS.UPDATE_PROPERTY_I](
         {commit}: AugmentedActionContext,
         payload: {
@@ -85,72 +86,132 @@ export const actionsItems: ActionTree<ItemsStateT, RootState> & ActionsTodoItems
         const {todoListId, itemId} = payload
         try {
             commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
+            //disable
             const receiveData = await API_ITEMS.deleteItemOfSpecialList(todoListId, itemId)
             if (receiveData.resultCode === 0) {
                 commit(MUTATIONS_TODO_ITEMS.DELETE_I, {todoListId, itemId})
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+                //un-disable
+            } else {
+                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
             }
         } catch (error) {
             if (error.messages.length) {
-                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
             } else {
-                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
             }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+            //un-disable
         }
     },
-    async [ACTIONS_TODO_ITEMS.CREATE_I]({commit}, payload){
-        const { todoListId, title, type } = payload
+    async [ACTIONS_TODO_ITEMS.CREATE_I]({commit}, payload) {
+        const {todoListId, title, type} = payload
         try {
             commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
+            //disable
             const receiveData = await API_ITEMS.createItemOfSpecialList(todoListId, title)
             if (receiveData.resultCode === 0) {
                 commit(MUTATIONS_TODO_ITEMS.ADD_NEW_I, {todoListId, item: receiveData.data.item})
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+                //un-disable
+            } else {
+                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
             }
         } catch (error) {
             if (error.messages.length) {
-                commit(STORE_MUTATIONS.SET_ERROR, error.message)
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
             } else {
-                commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
             }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+            //un-disable
         }
     },
     async [ACTIONS_TODO_ITEMS.UPDATE_PROPERTY_I]({commit, state}, payload) {
-    const {itemId, todoListId, type, model} = payload
+        const {itemId, todoListId, type, model} = payload
 
-    const item = state.items[todoListId].find(el => {
-        return el.id === itemId
-    })
+        const item = state.items[todoListId].find(el => {
+            return el.id === itemId
+        })
 
-    if(!item){
-        console.error('Item not founded ❌')
-        return;
-    }
+        if (!item) {
+            console.error('Item not founded ❌')
+            return;
+        }
 
-    const  modelDataItem =  {
-        title: item.title,
-        description: item.description,
-        completed: false,
-        status: item.status,
-        priority: item.priority,
-        startDate: item.startDate,
-        deadline: item.deadline,
-    }
-    const modelAPI = {...modelDataItem, ...model}
+        const modelDataItem = {
+            title: item.title,
+            description: item.description,
+            completed: false,
+            status: item.status,
+            priority: item.priority,
+            startDate: item.startDate,
+            deadline: item.deadline,
+        }
+        const modelAPI = {...modelDataItem, ...model}
 
-    try {
-        commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
-        const receiveData = await API_ITEMS.updateParticularDataOfSpecialList(todoListId, itemId, modelAPI)
-        if (receiveData.data.resultCode === 0) {
-            commit(MUTATIONS_TODO_ITEMS.UPDATE_PROPERTY_I, {todoListId, itemId, item: model})
+        try {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
+            //disable
+            const receiveData = await API_ITEMS.updateParticularDataOfSpecialList(todoListId, itemId, modelAPI)
+            if (receiveData.resultCode === 0) {
+                commit(MUTATIONS_TODO_ITEMS.UPDATE_PROPERTY_I, {todoListId, itemId, item: model})
+                commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+                //un-disable
+            } else {
+                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
+                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                } else {
+                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
+                    setTimeout(() => {
+                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+                    }, 5000)
+                }
+            }
+        } catch (error) {
+            if (error.messages.length) {
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
+            } else {
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
+            }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
+        } finally {
             commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
-        }
-    } catch (error) {
-        if (error.messages.length) {
-            commit(STORE_MUTATIONS.SET_ERROR, error.message)
-        } else {
-            commit(STORE_MUTATIONS.SET_ERROR, 'Some error')
+            //un-disable
         }
     }
-}
 }
