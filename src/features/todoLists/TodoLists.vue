@@ -1,4 +1,8 @@
 <template>
+  <div class="container flex sm:mr-2" style="margin: 20px auto; width: 80%">
+    <button @click="LogOut"
+            class="p-2 rounded-md bg-blue-500 ml-auto font-bold">Log out</button>
+  </div>
   <div class="xl:container lg:container md:container grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2
    gap-6 mx-auto justify-items-center align-middle
    lg:p-0 md:p-6 sm:p-6" style="margin: 16px auto">
@@ -33,9 +37,10 @@
 <script lang="ts">
 import TodoList from "@/components/TodoList.vue";
 import {mapGetters, useStore} from 'vuex'
-import {defineComponent, ref} from "vue";
+import {computed, defineComponent, ref, watch} from "vue";
 import AddForm from "@/components/AddForm.vue";
 import {ItemStatuses} from "@/api/api";
+import {useRouter} from "vue-router";
 
 export default defineComponent ({
   name: "TodoLists",
@@ -45,7 +50,10 @@ export default defineComponent ({
   },
   setup(){
     const store = useStore()
+    const router = useRouter()
     const inputActive = ref<boolean>(false)
+    const isAuth = computed<boolean>(() => store.getters['AUTH/isAuth'])
+    const shadowIsAuth = ref<typeof isAuth>(isAuth)
 
     //TodoLists
     function addTodoList(title: string) {
@@ -107,6 +115,27 @@ export default defineComponent ({
       })
     }
 
+    //Auth
+    function LogOut(){
+      const should = window.confirm("Are you sure you want to leave ?")
+      if (should) {
+        store.dispatch({
+          type: 'AUTH/LOG_OUT',
+        })
+      }
+    }
+
+    watch(store.state, () => {
+      if(!shadowIsAuth.value){
+        /*
+        Log out logic.
+        Unless the property isAuth value from the Authorization module will
+        equal to FALSE, the client would be redirected to the Login page
+        */
+        router.push({name: 'Login'})
+      }
+    })
+
     return {
       inputActive,
       toggleInputMode,
@@ -116,7 +145,8 @@ export default defineComponent ({
       createNewItem,
       deleteItem,
       renameItemTitle,
-      changeItemStatus
+      changeItemStatus,
+      LogOut
     }
   },
   computed: {
