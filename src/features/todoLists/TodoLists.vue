@@ -1,4 +1,5 @@
 <template>
+  <BaseProgress :percentage="20" :is-active="isActiveStoreStatus.status"  class="mx-2 mb-2" indeterminate/>
   <div class="container flex sm:mr-2" style="margin: 20px auto; width: 80%">
     <button @click="LogOut"
             class="p-2 rounded-md bg-blue-500 ml-auto font-bold">Log out</button>
@@ -37,16 +38,19 @@
 <script lang="ts">
 import TodoList from "@/components/TodoList.vue";
 import {mapGetters, useStore} from 'vuex'
-import {computed, defineComponent, ref, watch} from "vue";
+import {computed, defineComponent, reactive, ref, watch} from "vue";
 import AddForm from "@/components/shared/AddForm.vue";
 import {ItemStatuses} from "@/api/api";
 import {useRouter} from "vue-router";
+import BaseProgress from "@/components/shared/BaseProgress.vue";
+import {STORE_STATUS} from "@/store";
 
 export default defineComponent ({
   name: "TodoLists",
   components: {
     TodoList: TodoList,
-    AddForm: AddForm
+    AddForm: AddForm,
+    BaseProgress: BaseProgress
   },
   setup(){
     const store = useStore()
@@ -54,6 +58,10 @@ export default defineComponent ({
     const inputActive = ref<boolean>(false)
     const isAuth = computed<boolean>(() => store.getters['AUTH/isAuth'])
     const shadowIsAuth = ref<typeof isAuth>(isAuth)
+    const storeStatus = computed<STORE_STATUS>(() => store.getters.status)
+    const isActiveStoreStatus = reactive<{ status: boolean }>( {
+      status: false
+    })
 
     //TodoLists
     function addTodoList(title: string) {
@@ -134,6 +142,13 @@ export default defineComponent ({
         */
         router.push({name: 'Login'})
       }
+      if(storeStatus.value === STORE_STATUS.LOADING) {
+        isActiveStoreStatus.status = true
+
+        setTimeout(() => {
+          isActiveStoreStatus.status = false
+        }, 1000)
+      }
     })
 
     return {
@@ -146,7 +161,8 @@ export default defineComponent ({
       deleteItem,
       renameItemTitle,
       changeItemStatus,
-      LogOut
+      LogOut,
+      isActiveStoreStatus
     }
   },
   computed: {
