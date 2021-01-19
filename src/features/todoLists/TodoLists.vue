@@ -38,7 +38,7 @@
 import TodoList from "@/components/TodoList.vue";
 import {mapGetters, useStore} from 'vuex'
 import {computed, defineComponent, ref, watch} from "vue";
-import AddForm from "@/components/AddForm.vue";
+import AddForm from "@/components/shared/AddForm.vue";
 import {ItemStatuses} from "@/api/api";
 import {useRouter} from "vue-router";
 

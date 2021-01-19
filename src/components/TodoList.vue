@@ -51,7 +51,7 @@
 import {defineComponent, ref, computed} from 'vue'
 import Item from "@/components/Item.vue";
 import {useStore} from "vuex";
-import AddForm from "@/components/AddForm.vue";
+import AddForm from "@/components/shared/AddForm.vue";
 
 export default defineComponent({
   name: "TodoList",

@@ -57,7 +57,7 @@
 import {computed, defineComponent, reactive, ref, watch} from "vue";
 import {validators} from "@/utils/validators";
 import {useStore} from "vuex";
-import ErrorSnackbar from "@/components/ErrorSnackbar.vue";
+import ErrorSnackbar from "@/components/shared/ErrorSnackbar.vue";
 import {useRouter} from "vue-router";
 
 export default defineComponent({
