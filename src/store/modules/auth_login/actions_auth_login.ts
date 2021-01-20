@@ -11,6 +11,7 @@ import {ErrorUtil} from "@/utils/errorUtil";
 export enum ACTIONS_AUTH {
     LOG_IN = 'LOG_IN',
     LOG_OUT = 'LOG_OUT',
+    AUTH_ME = 'AUTH_ME'
 }
 
 //Types
@@ -32,6 +33,9 @@ export interface ActionsAuthorization {
     ): void
     [ACTIONS_AUTH.LOG_OUT](
         {commit}: AugmentedActionContext,
+    ): void
+    [ACTIONS_AUTH.AUTH_ME](
+        {commit}: AugmentedActionContext
     ): void
 }
 
@@ -65,6 +69,29 @@ export const actionsAuthorization: ActionTree<AuthState, RootState> & ActionsAut
             const receiveData = await API_AUTH.SignOut()
             if (receiveData.resultCode === 0){
                 commit(MUTATIONS_AUTHORIZATION.LOG_OUT, {auth: false})
+                commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+            }else {
+                ErrorUtil<AugmentedActionContext>(receiveData.messages[0], commit)
+            }
+        } catch (error){
+            if (error.messages.length) {
+                commit(STORE_MUTATIONS.SET_ERROR, error.message, {root: true})
+            } else {
+                commit(STORE_MUTATIONS.SET_ERROR, 'Some error', {root: true})
+            }
+            setTimeout(() => {
+                commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
+            }, 5000)
+        } finally {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
+        }
+    },
+    async [ACTIONS_AUTH.AUTH_ME]({commit}){
+        try {
+            commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.LOADING, {root: true})
+            const receiveData = await API_AUTH.AuthMe()
+            if (receiveData.resultCode === 0){
+                commit(MUTATIONS_AUTHORIZATION.LOG_OUT, {auth: true})
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
             }else {
                 ErrorUtil<AugmentedActionContext>(receiveData.messages[0], commit)
