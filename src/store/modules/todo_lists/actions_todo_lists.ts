@@ -5,6 +5,7 @@ import {API_TODO_LISTS} from "@/api/api";
 import {ActionContext, ActionTree} from "vuex";
 import {TodoListsStateT, TodoList} from "@/store/modules/todo_lists/todo_lists";
 import {RootState} from "@/confirm/types";
+import {ErrorUtil} from "@/utils/errorUtil";
 
 //Enums
 export enum ACTIONS_TODO_LISTS {
@@ -81,17 +82,7 @@ export const actionsTodoLists: ActionTree<TodoListsStateT, RootState> & ActionsT
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
                 //un-disable
             } else {
-                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
-                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                } else {
-                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                }
+                ErrorUtil<AugmentedTLSActionContext>(receiveData.messages[0], commit)
             }
         } catch (error) {
             if (error.messages.length) {
@@ -116,17 +107,7 @@ export const actionsTodoLists: ActionTree<TodoListsStateT, RootState> & ActionsT
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
                 //un-disable
             } else {
-                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
-                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                } else {
-                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                }
+                ErrorUtil<AugmentedTLSActionContext>(receiveData.messages[0], commit)
             }
         } catch (error) {
             if (error.messages.length) {
@@ -151,17 +132,7 @@ export const actionsTodoLists: ActionTree<TodoListsStateT, RootState> & ActionsT
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
                 //un-disable
             } else {
-                if (receiveData.messages[0] && receiveData.messages[0].length > 0) {
-                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                } else {
-                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                }
+                ErrorUtil<AugmentedTLSActionContext>(receiveData.messages[0], commit)
             }
         } catch (error) {
             if (error.messages.length) {

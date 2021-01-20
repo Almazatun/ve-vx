@@ -5,6 +5,7 @@ import {RootState, SignInParams} from "@/confirm/types";
 import {AuthState} from "@/store/modules/auth_login/auth_login";
 import {STORE_STATUS} from "@/store";
 import {API_AUTH} from "@/api/api";
+import {ErrorUtil} from "@/utils/errorUtil";
 
 //Enums
 export enum ACTIONS_AUTH {
@@ -43,17 +44,7 @@ export const actionsAuthorization: ActionTree<AuthState, RootState> & ActionsAut
                 commit(MUTATIONS_AUTHORIZATION.LOG_IN, {auth: true})
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
             }else {
-                if (receiveData.messages[0]) {
-                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                } else {
-                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                }
+                ErrorUtil<AugmentedActionContext>(receiveData.messages[0], commit)
             }
         } catch (error){
             if (error.messages.length) {
@@ -76,17 +67,7 @@ export const actionsAuthorization: ActionTree<AuthState, RootState> & ActionsAut
                 commit(MUTATIONS_AUTHORIZATION.LOG_OUT, {auth: false})
                 commit(STORE_MUTATIONS.SET_STATUS, STORE_STATUS.SUCCESS, {root: true})
             }else {
-                if (receiveData.messages[0]) {
-                    commit(STORE_MUTATIONS.SET_ERROR, receiveData.messages[0], {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                } else {
-                    commit(STORE_MUTATIONS.SET_ERROR, 'Some errors', {root: true})
-                    setTimeout(() => {
-                        commit(STORE_MUTATIONS.SET_ERROR, '', {root: true})
-                    }, 5000)
-                }
+                ErrorUtil<AugmentedActionContext>(receiveData.messages[0], commit)
             }
         } catch (error){
             if (error.messages.length) {
