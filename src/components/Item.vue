@@ -67,8 +67,10 @@ export default defineComponent({
 
     function renameTodoItem() {
       const title: string | null = prompt(`Please enter new title of the list`, '')
-      if (title?.trim() !== '') {
+      if (title && title?.trim() !== '') {
         props.renameItemTitle (props.todoListId, props.itemId, title)
+      }else if (title === null) {
+          return
       } else {
         alert("Hey, field should be required 👷‍♂️")
       }
