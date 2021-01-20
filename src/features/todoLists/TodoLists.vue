@@ -1,8 +1,9 @@
 <template>
-  <BaseProgress :percentage="20" :is-active="isActiveStoreStatus.status"  class="mx-2 mb-2" indeterminate/>
+  <BaseProgress :percentage="20" :is-active="isActiveStoreStatus.status" class="mx-2 mb-2" indeterminate/>
   <div class="container flex sm:mr-2" style="margin: 20px auto; width: 80%">
     <button @click="LogOut"
-            class="p-2 rounded-md bg-blue-500 ml-auto font-bold">Log out</button>
+            class="p-2 rounded-md bg-blue-500 ml-auto font-bold">Log out
+    </button>
   </div>
   <div class="xl:container lg:container md:container grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2
    gap-6 mx-auto justify-items-center align-middle
@@ -45,21 +46,21 @@ import {useRouter} from "vue-router";
 import BaseProgress from "@/components/shared/BaseProgress.vue";
 import {STORE_STATUS} from "@/store";
 
-export default defineComponent ({
+export default defineComponent({
   name: "TodoLists",
   components: {
     TodoList: TodoList,
     AddForm: AddForm,
     BaseProgress: BaseProgress
   },
-  setup(){
+  setup() {
     const store = useStore()
     const router = useRouter()
     const inputActive = ref<boolean>(false)
     const isAuth = computed<boolean>(() => store.getters['AUTH/isAuth'])
     const shadowIsAuth = ref<typeof isAuth>(isAuth)
     const storeStatus = computed<STORE_STATUS>(() => store.getters.status)
-    const isActiveStoreStatus = reactive<{ status: boolean }>( {
+    const isActiveStoreStatus = reactive<{ status: boolean }>({
       status: false
     })
 
@@ -74,13 +75,13 @@ export default defineComponent ({
       inputActive.value = !inputActive.value
     }
 
-    function deleteTodoList(todoListId: string){
+    function deleteTodoList(todoListId: string) {
       store.dispatch({
         type: 'TLS/REMOVE_TL', todoListId
       })
     }
 
-    function updateTodoList(event: Event , todoListId: string, title: string){
+    function updateTodoList(event: Event, todoListId: string, title: string) {
       store.dispatch({
         type: 'TLS/CHANGE_TL_TITLE',
         todoListId,
@@ -89,7 +90,7 @@ export default defineComponent ({
     }
 
     //TodoItems
-    function createNewItem(todoListId: string, title: string){
+    function createNewItem(todoListId: string, title: string) {
       store.dispatch({
         type: 'IMS/CREATE_I',
         todoListId,
@@ -97,7 +98,7 @@ export default defineComponent ({
       })
     }
 
-    function deleteItem(todoListId: string, itemId: string){
+    function deleteItem(todoListId: string, itemId: string) {
       store.dispatch({
         type: 'IMS/DELETE_I',
         todoListId,
@@ -105,7 +106,7 @@ export default defineComponent ({
       })
     }
 
-    function renameItemTitle(todoListId: string, itemId: string, title: string){
+    function renameItemTitle(todoListId: string, itemId: string, title: string) {
       store.dispatch({
         type: 'IMS/UPDATE_PROPERTY_I',
         todoListId,
@@ -114,7 +115,7 @@ export default defineComponent ({
       })
     }
 
-    function changeItemStatus(todoListId: string, itemId: string, status: ItemStatuses){
+    function changeItemStatus(todoListId: string, itemId: string, status: ItemStatuses) {
       store.dispatch({
         type: 'IMS/UPDATE_PROPERTY_I',
         todoListId,
@@ -124,7 +125,7 @@ export default defineComponent ({
     }
 
     //Auth
-    function LogOut(){
+    function LogOut() {
       const should = window.confirm("Are you sure you want to leave ?")
       if (should) {
         store.dispatch({
@@ -134,17 +135,17 @@ export default defineComponent ({
     }
 
     watch(store.state, () => {
-      if(!shadowIsAuth.value){
+      if (!shadowIsAuth.value) {
         /*
-        Log out logic.
+         * Log out logic.
         Unless the property isAuth value from the Authorization module will
         equal to FALSE, the client would be redirected to the Login page
         */
         router.push({name: 'Login'})
       }
-      if(storeStatus.value === STORE_STATUS.LOADING) {
+      if (storeStatus.value === STORE_STATUS.LOADING) {
         isActiveStoreStatus.status = true
-
+      } else if (storeStatus.value === STORE_STATUS.SUCCESS) {
         setTimeout(() => {
           isActiveStoreStatus.status = false
         }, 1000)
@@ -162,7 +163,8 @@ export default defineComponent ({
       renameItemTitle,
       changeItemStatus,
       LogOut,
-      isActiveStoreStatus
+      isActiveStoreStatus,
+      shadowIsAuth
     }
   },
   computed: {
@@ -179,7 +181,12 @@ export default defineComponent ({
     },
   },
   created() {
-    this.fetchTodoListData()
+    if (this.shadowIsAuth) {
+      /*
+        * If the user Authorized will available request to get data from a server
+      */
+      this.fetchTodoListData()
+    }
   }
 })
 </script>
